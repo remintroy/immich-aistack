@@ -1,89 +1,60 @@
-# Immich Auto Stacker 📸
+# Immich AI Stacker
 
-> **Automatically group similar images, bursts, and duplicates into Stacks in Immich.**
+**Automatically group similar images and bursts into Stacks using AI.**
 
-This tool uses advanced AI (CLIP models) and perceptual hashing to identify semantically similar images and near-duplicates, automatically organizing them into tidy "Stacks" within your Immich library.
+This tool leverages CLIP embeddings and perceptual hashing to semantically organize your Immich library, tidying up bursts and near-duplicates with high precision.
 
-## ✨ Features
+🔗 **[github.com/remintroy/immich-aistack](https://github.com/remintroy/immich-aistack)**
 
-- **Semantic Matching**: Uses `sentence-transformers/clip-ViT-L-14` to understand the _content_ of your images.
-- **Burst Detection**: Uses **Perceptual Hashing (pHash)** to find near-identical images (like burst mode shots).
-- **Efficient Clustering**: Powered by Facebook's **FAISS** for high-speed similarity search.
-- **Date-Aware**: Processes images day-by-day to ensure relevant grouping.
-- **Configurable**: Adjustable thresholds for strictness and semantic similarity.
+## Features
 
-## 🚀 Getting Started
+- **Semantic Grouping**: Uses `CLIP ViT-L-14` to stack images with matching content.
+- **Burst Detection**: Uses Perceptual Hashing (pHash) to catch near-identical shots.
+- **High Performance**: Optimized with FAISS for fast clustering.
+- **Safe**: Configurable dry-run mode to test before applying changes.
 
-### Prerequisites
+## Quick Start
 
-- Python 3.10 or higher
-- An [Immich](https://immich.app/) instance
-- An Immich API Key
+### 1. Install
 
-### Installation
+```bash
+git clone https://github.com/remintroy/immich-aistack.git
+cd immich-aistack
 
-1. **Clone the repository** (or download the files):
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-   ```bash
-   git clone <your-repo-url>
-   cd image-stacker
-   ```
+### 2. Configure
 
-2. **Set up a Virtual Environment**:
+Create a `.env` file in the project root:
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+```env
+IMMICH_URL=https://your-immich-domain.com
+IMMICH_API_KEY=your_api_key_here
+DRY_RUN=false
+```
 
-3. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+> **API Permissions Required:**
+> Ensure your API Key includes:
+>
+> - `asset.read`, `asset.view`, `asset.download`, `asset.statistics`
+> - All `Stack` permissions (create, delete, etc.)
 
-### Configuration
-
-1. **Environment Variables**:
-   Create a `.env` file in the root directory:
-
-   ```env
-   IMMICH_URL=http://your-immich-ip:2283
-   IMMICH_API_KEY=your-api-key-here
-   DRY_RUN=false
-   ```
-
-2. **Script Settings** (Optional):
-   Open `stack.py` to adjust processing parameters:
-   - `START_DATE` / `END_DATE`: The range of dates to process.
-   - `DRY_RUN`: Set to `True` to test without making changes.
-   - `HIGH_CLIP` / `LOW_CLIP`: Adjust semantic similarity sensitivity.
-
-## 🛠 Usage
-
-Run the script directly:
+### 3. Run
 
 ```bash
 python stack.py
 ```
 
-The script will:
+## How It Works
 
-1. Load the AI model (approx 1-2GB download on first run).
-2. Fetch image metadata for the specified date range.
-3. Download thumbnails to compute embeddings and hashes.
-4. Cluster images and send "Stack" commands to your Immich server.
+1. **Scan**: Fetches images day-by-day from your library.
+2. **Analyze**: Generates vector embeddings and visual hashes for each photo.
+3. **Cluster**: Groups images that are visually or semantically similar.
+4. **Stack**: Sends commands to Immich to stack the grouped assets.
 
-## ⚙️ How It Works
+---
 
-1. **Fetch**: Retrieves all images for a specific day.
-2. **Embed**: Generates a CLIP embedding (vector) and a perceptual hash (pHash) for each image.
-3. **Cluster**:
-   - Assets are grouped if they share a high **Semantic Score** (look similar conceptually).
-   - Assets are grouped if they have a low **Hamming Distance** (look nearly identical visually).
-4. **Stack**: Calls the Immich API to stack the grouped assets, picking the first one as the primary asset.
-
-## ⚠️ Notes
-
-- **Performance**: The first run will download models. GPU acceleration (`cuda`) is used if available; otherwise, it runs on CPU.
-- **Safety**: Use `DRY_RUN = True` in `stack.py` first to see what _would_ happen without modifying your library.
-- **Backup**: While this only "stacks" images, it's always good practice to backup your Immich database before running bulk automated tools.
+_Tip: Set `DRY_RUN=true` in your `.env` to preview stacks without modifying your library._
