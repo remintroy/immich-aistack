@@ -28,6 +28,9 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
+START_DATE = "2025-01-01"
+END_DATE = "2025-01-31"
+
 # ---- PERFORMANCE / MEMORY ----
 PAGE_SIZE = 40
 EMBED_BATCH = 16              # GPU-friendly
@@ -287,16 +290,13 @@ def run(start_date, end_date):
 # ===================== ENTRY =====================
 
 if __name__ == "__main__":
-    START = "2025-01-01"
-    END = "2025-03-01"
-
     log.info("==== IMMICH AUTO-STACKER START ====")
     log.info("MODEL: %s | DEVICE: %s", MODEL_NAME, DEVICE)
     log.info("DRY-RUN MODE: %s", DRY_RUN)
 
     run(
-        datetime.fromisoformat(START),
-        datetime.fromisoformat(END),
+        datetime.fromisoformat(START_DATE),
+        datetime.fromisoformat(END_DATE),
     )
 
     log.info("==== DONE ====")
