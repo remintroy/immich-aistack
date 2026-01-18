@@ -47,7 +47,7 @@ PHASH_STRICT = 3              # near-identical
 PHASH_LOOSE = 5               # burst-level
 TOP_K = 15                    # transitive chaining
 
-DRY_RUN = False               # TRUE for testing
+DRY_RUN = os.getenv("DRY_RUN", "false").lower() == "true"
 
 # =================================================
 

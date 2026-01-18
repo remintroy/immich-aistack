@@ -49,6 +49,7 @@ This tool uses advanced AI (CLIP models) and perceptual hashing to identify sema
    ```env
    IMMICH_URL=http://your-immich-ip:2283
    IMMICH_API_KEY=your-api-key-here
+   DRY_RUN=false
    ```
 
 2. **Script Settings** (Optional):
